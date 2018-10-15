@@ -1,2 +1,4 @@
-import say from './lib/test.js';
-say ();
+import say from './lib/test';
+
+
+say();
