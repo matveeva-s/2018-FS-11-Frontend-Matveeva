@@ -6,9 +6,9 @@ const template = `
 	<style>${shadowStyles.toString()}</style>
 	<form>
 		<div class="title">
-		  		Dialog with <strong>somebody</strong>
+		  Dialog with <strong>somebody</strong>
 		</div>
-		  
+				  
 		<div class="result"></div>
 		<form-input name="message_text" placeholder="Write a message here..." slot="message-input">
 			<span slot="icon"></span>
@@ -16,11 +16,6 @@ const template = `
 	</form>
 `;
 
-
-//const div = document.createElement('div');
- // div.innerHTML = 'Dialog with <strong>somebody</strong>';
-  //div.classList.add('mydiv');
- // document.body.appendChild(div);
 
 class MessageForm extends HTMLElement {
 	constructor () {
