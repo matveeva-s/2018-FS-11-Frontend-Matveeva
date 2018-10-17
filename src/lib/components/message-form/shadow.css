@@ -1,0 +1,21 @@
+form-input {
+	width: 90%;
+	padding: 15px 20px; 
+	border: 2px solid green;
+	border-radius: 5px;
+}
+
+.result {
+	color: red;
+}
+
+input[type=submit] {
+	visibility: collapse;
+}
+
+.title {
+	width: 90%;	
+	font-size: 25pt;
+	padding: 10pt;
+	background-color: #7FFF00;
+}
