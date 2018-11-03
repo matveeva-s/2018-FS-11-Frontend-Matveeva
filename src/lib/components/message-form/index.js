@@ -1,12 +1,16 @@
-//import styles from './index.css';
 import shadowStyles from './shadow.css';
-const slotName = 'message-input';
+
+//const slotName = 'message-input';
+
 
 const template = `
 	<style>${shadowStyles.toString()}</style>
 	<form>
+		<div class="header"></div>
 		<div class="title">
-		  Dialog with <strong>somebody</strong>
+		 <p align="left"> <img class="avatar" src="images/icon.png"> </p>
+		  <p><span class="name"><strong> Jennifer </strong></span><br>
+		     was online 2 hours ago </p>
 		</div>
 				  
 		<div class="result"></div>
