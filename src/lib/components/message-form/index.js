@@ -1,74 +1,119 @@
 import shadowStyles from './shadow.css';
 
-//const slotName = 'message-input';
-
+let oldMessage;
+let oldFile;
+let oldImage;
 
 const template = `
-	<style>${shadowStyles.toString()}</style>
-	<form>
-		<div class="header"></div>
-		<div class="title">
-		 <p align="left"> <img class="avatar" src="images/icon.png"> </p>
-		  <p><span class="name"><strong> Jennifer </strong></span><br>
-		     was online 2 hours ago </p>
-		</div>
-				  
-		<div class="result"></div>
-		<form-input name="message_text" placeholder="Write a message here..." slot="message-input">
-			<span slot="icon"></span>
-		</form-input>
-	</form>
+  <style>${shadowStyles.toString()}</style>
+  <form>
+    <div class="header"></div>
+    <div class="title">
+      <p align="left"> <img class="avatar" src="images/avatar.png"></p>
+      <p><span class="name"><strong> Jennifer </strong></span><br>was online 2 hours ago </p>
+    </div>
+    <div class = "result-scroll">		  
+      <div id="result" class="result"></div>
+    </div>
+    <div><label for="addFile">
+      <input id="addFile" class="addFileButton" type="file">
+    </label></div>
+    <div><label for="addImage">
+      <input id="addImage" class="addImageButton" type="file" multiple accept="image/*">
+    </label></div>
+    <form-input name="message_text" placeholder="Write a message here..." slot="message-input">
+      <span slot="icon"></span>
+    </form-input>
+  </form>
 `;
 
-
 class MessageForm extends HTMLElement {
-	constructor () {
-		super();
-		const shadowRoot = this.attachShadow({mode: 'open'});
-		shadowRoot.innerHTML = template;
-		this._initElements();
-		this._addHandlers();
-	}
+  constructor() {
+    super();
+    const shadowRoot = this.attachShadow({ mode: 'open' });
+    shadowRoot.innerHTML = template;
+    this._initElements();
+    this._addHandlers();
+  }
 
-	static get observedAttributes() {
-		return [
-			"action",
-			"method"
-		]
-	}
+  static get observedAttributes() {
+    return [
+      'action',
+      'method',
+    ];
+  }
 
-	attributeChangedCallback(attrName, oldVal, newVal) {
-		this._elements.form[attrName] = newVal;
-	}
+  attributeChangedCallback(attrName, oldVal, newVal) {
+    this._elements.form[attrName] = newVal;
+  }
 
-	_initElements () {
-		var form = this.shadowRoot.querySelector('form');
-		var message = this.shadowRoot.querySelector('.result');
-		this._elements = {
-			form: form,
-			message: message
-		};
-	}
+  _initElements() {
+    const form = this.shadowRoot.querySelector('form');
+    const message = this.shadowRoot.querySelector('.result');
+    const file = this.shadowRoot.querySelector('.addFile');
+    this._elements = {
+      form,
+      message,
+      file,
+    };
+  }
 
-	_addHandlers () {
-		this._elements.form.addEventListener('submit', this._onSubmit.bind(this));
-		this._elements.form.addEventListener('keypress', this._onKeyPress.bind(this));
-		//this._elements.inputSlot.addEventListener('slotchange', this._onSlotChange.bind(this));
-	}
+  _addHandlers() {
+    this._elements.form.addEventListener('submit', this._onSubmit.bind(this));
+    this._elements.form.addEventListener('keypress', this._onKeyPress.bind(this));
+    this._elements.form.addEventListener('clickAddFile', this._onAddFile.bind(this));
+    this._elements.form.addEventListener('clickAddImage', this._onAddImage.bind(this));
+    this._elements.form.addEventListener('change', this._onChange(this));
+    this._elements.inputSlot.addEventListener('slotchange', this._onSlotChange.bind(this));
+  }
 
-	_onSubmit (event) {
-		this._elements.message.innerText = Array.from(this._elements.form.elements).map(
-			el => el.value
-		).join(', ');
-		event.preventDefault();
-		return false;
-	}
+  _onAddFile(event) {
+    const name = Array.from(this._elements.form.elements).map(el => el.value)[0];
+    const newFileDiv = document.createElement('div');
+    newFileDiv.className = 'cloud';
+    newFileDiv.innerHTML = `<font color = 'black'>Added file:</font>` + name.slice(12);
+    this._elements.message.appendChild(newFileDiv);
+  }
 
-	_onKeyPress (event) {
-		if (event.keyCode == 13) {
-			this._elements.form.dispatchEvent(new Event('submit'));
-		}
-	}
+  _onAddImage(event) {
+    const newImage = document.createElement('img');
+    console.log(this.shadowRoot.querySelector('input[type=file]').files[0]);
+    const url = URL.createObjectURL(this.shadowRoot.getElementById('addImage').files[0]);
+    console.log('url = ', url);
+    newImage.className = 'preview';
+    newImage.src = url;
+    this._elements.message.appendChild(newImage);
+  }
+
+  _onSubmit(event) {
+    const text = Array.from(this._elements.form.elements).map(el => el.value);
+    const file = text[0];
+    const image = text[1];
+    const message = text[2];
+    if ((file.length + image.length + message.length) === 0 || message === oldMessage) {
+      return false;
+    }
+    oldMessage = message;
+    oldFile = file;
+    if (file.length !== 0 || file !== oldFile) {
+      this._elements.form.dispatchEvent(new Event('clickAddFile'));
+    }
+    if (image.length !== 0 || image !== oldImage) {
+      this._elements.form.dispatchEvent(new Event('clickAddImage'));
+    }
+    const newMessageDiv = document.createElement('div');
+    newMessageDiv.className = 'cloud';
+    newMessageDiv.innerText = message;
+    this._elements.message.appendChild(newMessageDiv);
+    event.preventDefault();
+    return false;
+  }
+
+  _onKeyPress(event) {
+    if (event.keyCode === 13) {
+      this._elements.form.dispatchEvent(new Event('submit'));
+    }
+  }
 }
 
 customElements.define('message-form', MessageForm);
