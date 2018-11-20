@@ -12,7 +12,7 @@ const template = `
       <p align="left"> <img class="avatar" src="images/avatar.png"></p>
       <p><span class="name"><strong> Jennifer </strong></span><br>was online 2 hours ago </p>
     </div>
-    <div class = "result-scroll">		  
+    <div class = "result-scroll">
       <div id="result" class="result"></div>
     </div>
     <div><label for="addFile">

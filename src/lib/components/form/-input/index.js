@@ -48,8 +48,6 @@ class FormInput extends HTMLElement {
 
   _onSubmit(event) {
     this._elements.input.value = '';
-    // event.preventDefault();
-    // this._elements.hiddenInput.value = this._elements.input.value;
   }
 
   _onKeyPress(event) {
