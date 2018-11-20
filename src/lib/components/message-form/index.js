@@ -12,7 +12,7 @@ const template = `
       <p align="left"> <img class="avatar" src="../../src/lib/components/message-form/images/avatar.png" style="margin: auto; padding-right: 10px"></p>
       <p><span class="name"><strong> Jennifer </strong></span><br>was online 2 hours ago </p>
     </div>
-    <div class = "result-scroll">		  
+    <div class = "result-scroll">
       <div id="result" class="result"></div>
     </div>
     <div><label for="addFile">
