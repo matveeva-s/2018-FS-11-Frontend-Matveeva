@@ -63,8 +63,6 @@ class MessageForm extends HTMLElement {
     this._elements.form.addEventListener('keypress', this._onKeyPress.bind(this));
     this._elements.form.addEventListener('clickAddFile', this._onAddFile.bind(this));
     this._elements.form.addEventListener('clickAddImage', this._onAddImage.bind(this));
-    this._elements.form.addEventListener('change', this._onChange(this));
-    this._elements.inputSlot.addEventListener('slotchange', this._onSlotChange.bind(this));
   }
 
   _onAddFile(event) {
