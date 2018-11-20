@@ -9,7 +9,7 @@ const template = `
   <form>
     <div class="header"></div>
     <div class="title">
-      <p align="left"> <img class="avatar" src="images/avatar.png"></p>
+      <p align="left"> <img class="avatar" src="../../src/lib/components/message-form/images/avatar.png" style="margin: auto; padding-right: 10px"></p>
       <p><span class="name"><strong> Jennifer </strong></span><br>was online 2 hours ago </p>
     </div>
     <div class = "result-scroll">
@@ -63,8 +63,6 @@ class MessageForm extends HTMLElement {
     this._elements.form.addEventListener('keypress', this._onKeyPress.bind(this));
     this._elements.form.addEventListener('clickAddFile', this._onAddFile.bind(this));
     this._elements.form.addEventListener('clickAddImage', this._onAddImage.bind(this));
-    this._elements.form.addEventListener('change', this._onChange(this));
-    this._elements.inputSlot.addEventListener('slotchange', this._onSlotChange.bind(this));
   }
 
   _onAddFile(event) {
@@ -77,12 +75,13 @@ class MessageForm extends HTMLElement {
 
   _onAddImage(event) {
     const newImage = document.createElement('img');
-    console.log(this.shadowRoot.querySelector('input[type=file]').files[0]);
+    const name = Array.from(this._elements.form.elements).map(el => el.value)[1].slice(12);
     const url = URL.createObjectURL(this.shadowRoot.getElementById('addImage').files[0]);
-    console.log('url = ', url);
     newImage.className = 'preview';
     newImage.src = url;
     this._elements.message.appendChild(newImage);
+    this.SendImage(url,name);
+    console.log(url, name);
   }
 
   _onSubmit(event) {
@@ -93,22 +92,44 @@ class MessageForm extends HTMLElement {
     if ((file.length + image.length + message.length) === 0 || message === oldMessage) {
       return false;
     }
-    oldMessage = message;
-    oldFile = file;
-    if (file.length !== 0 || file !== oldFile) {
+    if (file.length !== 0 && file !== oldFile) {
       this._elements.form.dispatchEvent(new Event('clickAddFile'));
     }
-    if (image.length !== 0 || image !== oldImage) {
+    if (image.length !== 0 && image !== oldImage) {
       this._elements.form.dispatchEvent(new Event('clickAddImage'));
     }
     const newMessageDiv = document.createElement('div');
     newMessageDiv.className = 'cloud';
     newMessageDiv.innerText = message;
     this._elements.message.appendChild(newMessageDiv);
+    this.SendMessage(message);
+    oldMessage = message;
+    oldFile = file;
+    oldImage = image;
     event.preventDefault();
     return false;
   }
 
+  SendImage(url, name) {
+    var formData = new FormData();
+    formData.append("image", url, name);
+    const myInit = {
+      method: 'POST',
+      body: formData
+    };
+    const myRequest = new Request('http://127.0.0.1:8081/message');
+    fetch(myRequest, myInit).then(response => console.log(response));
+  }
+  SendMessage(message) {
+    var formData = new FormData();
+    formData.append("message", message);
+    const myInit = {
+        method: 'POST',
+        body: formData
+    };
+    const myRequest = new Request('http://127.0.0.1:8081/message');
+    fetch(myRequest, myInit).then(response => console.log(response));
+  }
   _onKeyPress(event) {
     if (event.keyCode === 13) {
       this._elements.form.dispatchEvent(new Event('submit'));
