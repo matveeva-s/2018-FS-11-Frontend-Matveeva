@@ -1,9 +1,0 @@
-.pseudo {
-	visibility: hidden;
-}
-
-.flex-container {
-  display: -webkit-flex; 
-  display: flex; /*отображает контейнер как блочный элемент*/
-}
-
