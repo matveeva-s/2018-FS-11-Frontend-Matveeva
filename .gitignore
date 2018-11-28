@@ -1,5 +1,6 @@
 dist/
-NORMAL/
+frontend-react-app/
 node_modules/
 *.idea
+npm-debug.log
 
