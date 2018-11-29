@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "react": "^16.6.3",
     "react-dom": "^16.6.3",
-    "react-router-dom": "^4.3.1",
-    "react-scripts": "2.1.1"
+    "react-scripts": "2.1.1",
+    "redux": "^4.0.1",
+    "redux-thunk": "^2.3.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -22,5 +22,24 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {
+    "express": "^4.16.4",
+    "express-fileupload": "^1.0.0",
+    "react": "^16.6.3",
+    "react-redux": "^5.1.1",
+    "react-router-dom": "^4.3.1"
+  },
+  "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
+  "main": "express.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/matveeva-s/2018-FS-11-Frontend-Matveeva.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/matveeva-s/2018-FS-11-Frontend-Matveeva/issues"
+  },
+  "homepage": "https://github.com/matveeva-s/2018-FS-11-Frontend-Matveeva#readme"
 }
