@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import { Link } from 'react-router-dom'
-
+import { connect } from 'react-redux'
 class Chat extends React.Component {
     constructor(props) {
         super(props);
@@ -40,7 +40,6 @@ class Chat extends React.Component {
         SendImage(url, this.state.file.name);
         document.getElementById('result').appendChild(imageDiv);
     }
-
     handleSubmit(event) {
         if (this.state.value === '') {
             event.preventDefault();
@@ -52,6 +51,7 @@ class Chat extends React.Component {
         document.getElementById('result').appendChild(message);
         document.getElementById('form-input').value = '';
         SendMessage(message.innerText);
+        this.props.AddUnreadMessage(this.props.chatId);
         this.state.value = '';
         event.preventDefault();
         return false;
@@ -63,7 +63,7 @@ class Chat extends React.Component {
                 <div className="header"/>
                 <Title name={this.state.name} status={this.state.status} avatar={this.state.avatar}/>
                 <div className="result-scroll">
-                    <div id="result" className="result"/>
+                  <div id="result" className="result"/>
                 </div>
                 <input id="addFile" className="addFileButton" type="file" onChange={this.handleAddFile}/>
                 <input id="addImage" className="addImageButton" type="file" multiple accept="image/*" onChange={this.handleAddImage}/>
@@ -76,28 +76,28 @@ class Chat extends React.Component {
 }
 
 function SendImage(url, name) {
-    let formData = new FormData();
+    const formData = new FormData();
     formData.append("image", url, name);
     const myInit = {
         method: 'POST',
         body: formData
     };
     const myRequest = new Request('http://127.0.0.1:8081/message');
-    fetch(myRequest, myInit).then(response => console.log(response));
+    fetch(myRequest, myInit).then();
+    //fetch(myRequest, myInit).then(response => console.log(response));
 }
-
-
-function SendMessage(message)
-{
-    let formData = new FormData();
+function SendMessage(message) {
+    const formData = new FormData();
     formData.append("message", message);
     const myInit = {
         method: 'POST',
         body: formData
     };
     const myRequest = new Request('http://127.0.0.1:8081/message');
-    fetch(myRequest, myInit).then(response => console.log(response));
+    fetch(myRequest, myInit).then();
+    //fetch(myRequest, myInit).then(response => console.log(response));
 }
+
 function Title(props) {
     return(
         <div className="title">
@@ -112,5 +112,14 @@ function Title(props) {
         </div>
     )
 }
-//<form method="link" action={"/"}></form>
-export default Chat;
+
+export default connect(
+    state =>({
+        indexStore: state
+    }),
+    dispatch => ({
+      AddUnreadMessage: (chatID)=> {
+          dispatch({type: 'ADD_UNREAD_MESSAGE', payload: chatID})
+      }
+    })
+)(Chat);

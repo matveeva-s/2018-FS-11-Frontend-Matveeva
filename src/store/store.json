@@ -1,0 +1,23 @@
+{
+  "user": [
+    {
+      "name": "Jerry Smith",
+      "authorization": true
+    }
+  ],
+  "chats": [
+    {
+      "id": 1,
+      "title": "Morty Smith",
+      "unread": 0,
+      "isSelected": false
+    },
+    {
+      "id": 2,
+      "title": "Rick Sanchez",
+      "unread": 0,
+      "isSelected": false
+    }
+  ]
+}
+
