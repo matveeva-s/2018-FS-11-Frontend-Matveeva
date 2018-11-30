@@ -35,7 +35,7 @@ function Reducer(state = initialState, action) {
         const copy = state;
         var chatID = action.payload;
         copy.chats[chatID].unread++;
-        console.log("UpdateReducer: action.payload = ", chatID);
+        //console.log("UpdateReducer: action.payload = ", chatID);
         return copy;
     }
     return state;
@@ -44,7 +44,7 @@ function Reducer(state = initialState, action) {
 const store = createStore(Reducer,  window.__REDUX_DEVTOOLS_EXTENSION__&& window.__REDUX_DEVTOOLS_EXTENSION__());
 
 store.subscribe(() => {
-    console.log('subscribe', store.getState());
+    //console.log('subscribe', store.getState());
 });
 
 ReactDOM.render((

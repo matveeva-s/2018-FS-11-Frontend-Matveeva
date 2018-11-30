@@ -13,13 +13,13 @@ class Chat extends React.Component {
             avatar: props.avatar,
         };
         this._addHandlers();
-
     }
     _addHandlers() {
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleAddFile = this.handleAddFile.bind(this);
         this.handleAddImage = this.handleAddImage.bind(this);
+        this.createInterlocutorMessage = this.createInterlocutorMessage.bind(this);
     }
     handleChange(event) {
         this.setState({value: event.target.value});
@@ -51,8 +51,16 @@ class Chat extends React.Component {
         document.getElementById('result').appendChild(message);
         document.getElementById('form-input').value = '';
         SendMessage(message.innerText);
-        this.props.AddUnreadMessage(this.props.chatId);
         this.state.value = '';
+        event.preventDefault();
+        return false;
+    }
+    createInterlocutorMessage(event) {
+        const message = document.createElement('div');
+        message.className = 'interlocutorCloud';
+        message.innerText = "СООБЩЕНИЕ СОБЕСЕДНИКА";
+        document.getElementById('result').appendChild(message);
+        this.props.AddUnreadMessage(this.props.chatId);
         event.preventDefault();
         return false;
     }
@@ -70,10 +78,12 @@ class Chat extends React.Component {
                 <form onSubmit={this.handleSubmit}>
                     <input id="form-input" placeholder="Write a message here..." value = {this.state.value} onChange={this.handleChange}/>
                 </form>
+                <button onClick={this.createInterlocutorMessage}>Create Interlocutor Message</button>
             </div>
         );
     }
 }
+
 
 function SendImage(url, name) {
     const formData = new FormData();
