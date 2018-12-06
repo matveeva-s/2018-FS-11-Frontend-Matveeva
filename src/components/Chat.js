@@ -111,7 +111,7 @@ function SendMessage(message) {
 function Title(props) {
     return(
         <div className="title">
-            <Link to = '/'><button id="backButton"/></Link>
+            <Link to = '/chats'><button id="backButton"/></Link>
             <img className="avatar" src={props.avatar} alt="avatar"/>
             <p>
                 <span className="name">{props.name}</span>

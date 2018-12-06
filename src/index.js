@@ -11,7 +11,9 @@ const initialState = {
     "user": [
         {
             "name": "Jerry Smith",
-            "authorization": true
+            "login": "jerry",
+            "password": "123",
+            "authorization": false
         }
     ],
     "chats": [
@@ -35,7 +37,15 @@ function Reducer(state = initialState, action) {
         const copy = state;
         var chatID = action.payload;
         copy.chats[chatID].unread++;
-        //console.log("UpdateReducer: action.payload = ", chatID);
+        return copy;
+    }
+    if (action.type === 'AUTHORIZATION') {
+        const copy = state;
+        var checkingLogin = action.payload[0];
+        var checkingPassword = action.payload[1];
+        if (checkingLogin === copy.user[0].login && checkingPassword === copy.user[0].password){
+            copy.user[0].authorization = true;
+        }
         return copy;
     }
     return state;
