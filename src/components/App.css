@@ -65,6 +65,30 @@
   justify-content: flex-end;
   align-content: space-between;
 }
+.resultForAuth {
+  color: #000080;
+  font-size: 20px;
+  width: 400px;
+  min-height: 460px;
+  background-color: #e4d7e8;
+  border: 1px solid #5e1172;
+
+
+  display: -webkit-flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+}
+
+.authForm {
+  position: relative;
+  left: 40px;
+  width: 250px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #5e1172;
+}
+
 .result-scroll{
   border: 1px solid #5e1172;
   overflow-y: scroll;
@@ -171,6 +195,39 @@
   flex-direction: column;
   margin-left: auto;
 }
+#enterButton{
+  background: url('images/enter1.png') no-repeat;
+  position: relative;
+  top: -19px;
+  left: 60px;
+  width: 40px;
+  height: 40px;
+  text-indent: -1000em;
+  border: 0;
+  padding: 0;
+}
+#vkAuthButton {
+  background: url('images/vk80.png') no-repeat;
+  position: relative;
+  left: -40px;
+  width: 80px;
+  height: 80px;
+  text-indent: -1000em;
+  border: 0;
+  padding: 0;
+}
+#instaAuthButton {
+  background: url('images/insta80.png') no-repeat;
+  position: relative;
+  left: 40px;
+  top: -80px;
+  width: 80px;
+  height: 80px;
+  text-indent: -1000em;
+  border: 0;
+  padding: 0;
+}
+
 
 #backButton {
   background: url('images/back.png') no-repeat;
