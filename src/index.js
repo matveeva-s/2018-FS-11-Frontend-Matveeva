@@ -21,22 +21,53 @@ const initialState = {
             "id": 0,
             "title": "Morty Smith",
             "unread": 0,
-            "isSelected": false
+            "isSelected": false,
+            "messages": [
+                {
+                    "text": "Hi Morty!",
+                    "own": false
+                },
+                {
+                    "text": "Hello!",
+                    "own": true
+                },
+            ]
         },
         {
             "id": 1,
             "title": "Rick Sanchez",
             "unread": 0,
-            "isSelected": false
+            "isSelected": false,
+            "messages": [
+                {
+                    "text": "Hi Rick!",
+                    "own": false
+                },
+                {
+                    "text": "Wabulabadaba",
+                    "own": true
+                },
+            ]
         }
     ]
 };
 
 function Reducer(state = initialState, action) {
-    if (action.type ==='ADD_UNREAD_MESSAGE') {
+    if (action.type ==='ADD_MESSAGE') {
         const copy = state;
-        var chatID = action.payload;
-        copy.chats[chatID].unread++;
+        let chatId = action.payload[0];
+        let text = action.payload[1];
+        let own = action.payload[2];
+        //console.log(chatId, messageText, self);
+        if (own === false) copy.chats[chatId].unread++;
+        copy.chats[chatId].messages.push({text,own});
+        //console.log(copy.chats[chatId].messages);
+        return copy;
+    }
+    if (action.type === 'UPDATE_UNREAD_MESSAGE') {
+        const copy = state;
+        var chatId = action.payload;
+        copy.chats[chatId].unread = 0;
         return copy;
     }
     if (action.type === 'AUTHORIZATION') {
@@ -48,6 +79,7 @@ function Reducer(state = initialState, action) {
         }
         return copy;
     }
+
     return state;
 }
 
