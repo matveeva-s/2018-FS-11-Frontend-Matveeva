@@ -14,6 +14,11 @@ class Chat extends React.Component {
         };
         this._addHandlers();
     }
+
+    componentWillMount() {
+        this.props.UpdateUnreadMessage(this.props.chatId);
+    }
+
     _addHandlers() {
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -48,9 +53,10 @@ class Chat extends React.Component {
         const message = document.createElement('div');
         message.className = 'cloud';
         message.innerText = this.state.value;
-        document.getElementById('result').appendChild(message);
+        //document.getElementById('result').appendChild(message);
         document.getElementById('form-input').value = '';
-        SendMessage(message.innerText);
+        //SendMessage(message.innerText);
+        this.props.AddMessage([this.props.chatId, message.innerText, true]);
         this.state.value = '';
         event.preventDefault();
         return false;
@@ -60,23 +66,44 @@ class Chat extends React.Component {
         message.className = 'interlocutorCloud';
         message.innerText = "СООБЩЕНИЕ СОБЕСЕДНИКА";
         document.getElementById('result').appendChild(message);
-        this.props.AddUnreadMessage(this.props.chatId);
+        this.props.AddMessage([this.props.chatId, message.innerText, false]);
         event.preventDefault();
         return false;
     }
-
     render() {
+        const { state, props } = this;
+        const chats = props.indexStore.chats;
+        const currChat = chats[props.chatId];
+        //debugger;
+
         return (
             <div className="Messenger">
                 <div className="header"/>
-                <Title name={this.state.name} status={this.state.status} avatar={this.state.avatar}/>
+                <Title
+                    name={state.name}
+                    status={state.status}
+                    avatar={state.avatar}
+                />
                 <div className="result-scroll">
-                  <div id="result" className="result"/>
+                    <div id="result" className="result">
+                        {
+                            currChat.messages.map(message => {
+                                if (message.own)
+                                    return (
+                                        <div className="cloud"> {message.text} </div>
+                                    );
+                                else
+                                    return (
+                                        <div className="interlocutorCloud"> {message.text} </div>
+                                    );
+                            })
+                        }
+                    </div>
                 </div>
                 <input id="addFile" className="addFileButton" type="file" onChange={this.handleAddFile}/>
                 <input id="addImage" className="addImageButton" type="file" multiple accept="image/*" onChange={this.handleAddImage}/>
                 <form onSubmit={this.handleSubmit}>
-                    <input id="form-input" placeholder="Write a message here..." value = {this.state.value} onChange={this.handleChange}/>
+                    <input id="form-input" placeholder="Write a message here..." value = {state.value} onChange={this.handleChange}/>
                 </form>
                 <button onClick={this.createInterlocutorMessage}>Create Interlocutor Message</button>
             </div>
@@ -84,6 +111,20 @@ class Chat extends React.Component {
     }
 }
 
+function Title(props) {
+    return(
+        <div className="title">
+            <Link to = '/chats'><button id="backButton"/></Link>
+            <img className="avatar" src={props.avatar} alt="avatar"/>
+            <p>
+                <span className="name">{props.name}</span>
+                <br/>{props.status}
+            </p>
+            <input id="searchButton" type="button"/>
+            <input id="menuButton" type="button"/>
+        </div>
+    )
+}
 
 function SendImage(url, name) {
     const formData = new FormData();
@@ -108,28 +149,16 @@ function SendMessage(message) {
     //fetch(myRequest, myInit).then(response => console.log(response));
 }
 
-function Title(props) {
-    return(
-        <div className="title">
-            <Link to = '/chats'><button id="backButton"/></Link>
-            <img className="avatar" src={props.avatar} alt="avatar"/>
-            <p>
-                <span className="name">{props.name}</span>
-                <br/>{props.status}
-            </p>
-            <input id="searchButton" type="button"/>
-            <input id="menuButton" type="button"/>
-        </div>
-    )
-}
-
 export default connect(
     state =>({
         indexStore: state
     }),
     dispatch => ({
-      AddUnreadMessage: (chatID)=> {
-          dispatch({type: 'ADD_UNREAD_MESSAGE', payload: chatID})
+      AddMessage: (payload)=> {
+          dispatch({type: 'ADD_MESSAGE', payload: payload})
+      },
+      UpdateUnreadMessage: (chat_number) => {
+          dispatch({type: 'UPDATE_UNREAD_MESSAGE', payload: chat_number})
       }
     })
 )(Chat);

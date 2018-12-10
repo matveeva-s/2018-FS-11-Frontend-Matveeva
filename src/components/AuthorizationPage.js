@@ -33,13 +33,8 @@ class AuthorizationPage extends React.Component {
         }
         document.getElementById('loginForm').value = '';
         document.getElementById('passwordForm').value = '';
-        //console.log("before setState(): ", this.state.login, this.state.password);
-        //this.setState({login: ''});
-        //this.setState({password: ''});
-
         this.state.login = '';
         this.state.password = '';
-        //console.log("after setState(): ", this.state.login, this.state.password);
         event.preventDefault();
         return false;
     }
