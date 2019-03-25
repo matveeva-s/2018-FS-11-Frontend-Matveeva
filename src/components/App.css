@@ -21,8 +21,6 @@
   align-items: center;
 }
 
-
-
 .header {
   background-color: #8e24aa;
   width: 400px;
@@ -31,50 +29,42 @@
 }
 
 .emoticonsField {
-  width: 205px;
-  height: 32px;
+  width: 195px;
+  height: 35px;
   position: absolute;
-  top: 520px;
+  top: -10px;
+  left: -164px;
   border: 2px solid #5e1172;
-  border-radius: 5px;
-  left: 180px;
-  background-color: #D6C3DC;
-
-  display: -webkit-flex;
-  justify-content: space-between;
-  flex-direction: row;
-
+  border-radius: 3px;
+  background: #cbabd6 url('images/emoticon_sprite.png') no-repeat;
 }
 
-.em1 {
-    width: 32px;
-    height: 32px;
-    background: transparent url('images/emoticons/1.png') no-repeat center top;
+.emoticons {
+  width: 32px;
+  height: 32px;
+  background: url('images/emoticon_sprite.png') no-repeat;
 }
-.em2 {
-    width: 32px;
-    height: 32px;
-    background: transparent url('images/emoticons/2.png') no-repeat center top; }
-.em3 {
-    width: 32px;
-    height: 32px;
-    background: transparent url('images/emoticons/3.png') no-repeat center top;
+
+
+.bg1{
+  background-position: -0px -0px;
 }
-.em4 {
-    width: 32px;
-    height: 32px;
-    background: transparent url('images/emoticons/4.png') no-repeat center top;
+.bg2{
+  background-position: -32px -0px;
 }
-.em5 {
-    width: 32px;
-    height: 32px;
-    background: transparent url('images/emoticons/5.png') no-repeat center top;
+.bg3{
+  background-position: -64px -0px;
 }
-.em6 {
-    width: 32px;
-    height: 32px;
-    background: transparent url('images/emoticons/6.png') no-repeat center top;
+.bg4{
+  background-position: -96px -0px;
 }
+.bg5{
+  background-position: -128px -0px;
+}
+.bg6{
+  background-position: -160px -0px;
+}
+
 
 .name {
   color: whitesmoke;
@@ -196,26 +186,35 @@
   margin-left: unset;
 }
 
+#contentEditableDiv {
+  position: relative;
+  width: 365px;
+  min-height: 110px;
+}
 
+#formButtons {
+  position: relative;
+  width: 30px;
+  height: 130px;
+  display: -webkit-flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
 
 .sendButton {
   background: transparent url('images/sended.png') no-repeat center top;
   text-indent: -9999px;
-  position: absolute;
-  left: 365px;
-  top: 553px;
+  position: relative;
   border: 0px;
   width: 30px;
-  height: 30px
+  height: 30px;
 }
 
-
 .addEmoticonButton {
-  background: transparent url('images/emoticon.png') no-repeat center top;
+  background: transparent url('images/addEmoticonsButton.png') no-repeat center top;
   text-indent: -9999px;
-  position: absolute;
-  left: 363px;
-  top: 585px;
+  position: relative;
+  left: -2px;
   border: 0px;
   width: 30px;
   height: 30px;
@@ -224,33 +223,31 @@
 .addFileButton {
   width: 25px;
   height: 25px;
-  overflow: hidden;
-  background: transparent url('images/clip.png') no-repeat center top;
-  position: absolute;
-  top: 644px;
-  left: 365px;
+  background: transparent url('images/addFileButton.png') no-repeat center top;
+  position: relative;
   text-indent: -1000em;
-  cursor: pointer;
 }
 .addImageButton {
   width: 25px;
   height: 25px;
   overflow: hidden;
-  background: transparent url('images/photo.png') no-repeat center top;
-  position: absolute;
-  top: 614px;
-  left: 365px;
+  background: transparent url('images/addImageButton.png') no-repeat center top;
+  position: relative;
   text-indent: -1000em;
   cursor: pointer;
 }
 
 #form-input {
-  width: 386px;
-  min-height: 120px;
-  padding-top: 20px;
-  padding-left: 12px;
+  width: 398px;
+  position: absolute;
+  top: 535px;
+  min-height: 130px;
   border: 2px solid #000080;
   font-size: 20px;
+
+  display: -webkit-flex;
+  flex-direction: row;
+  margin-left: auto;
 }
 
 .preview {
@@ -348,4 +345,9 @@
   text-indent: -1000em;
   border: 0;
   padding: 0;
+}
+
+#intMessageButton {
+  position: relative;
+  top:135px;
 }

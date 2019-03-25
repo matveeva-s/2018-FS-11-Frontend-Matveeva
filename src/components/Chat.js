@@ -6,7 +6,6 @@ class Chat extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            value: '',
             file: '',
             name: props.name,
             status: props.status,
@@ -19,17 +18,12 @@ class Chat extends React.Component {
     }
 
     _addHandlers() {
-        this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleAddFile = this.handleAddFile.bind(this);
         this.handleAddImage = this.handleAddImage.bind(this);
         this.handleAddEmoticon = this.handleAddEmoticon.bind(this);
         this.createInterlocutorMessage = this.createInterlocutorMessage.bind(this);
         this.handleClickEmoticon = this.handleClickEmoticon.bind(this);
-    }
-    handleChange(event) {
-        document.getElementById("hidden").value = document.getElementById("form-input").innerHTML;
-        this.setState({value: event.target.value});
     }
     handleAddFile(event) {
         this.state.file = event.target.files[0];
@@ -39,24 +33,19 @@ class Chat extends React.Component {
         document.getElementById('result').appendChild(fileDiv);
     }
     handleClickEmoticon(event) {
-        document.querySelector('[contenteditable]').appendChild(event.target.cloneNode(true));
+        document.querySelector('[contentEditable]').appendChild(event.target.cloneNode(true));
     }
     handleAddEmoticon(event) {
         const emoticonsDiv = document.createElement('div');
         emoticonsDiv.className = 'emoticonsField';
-        const em1 = document.createElement('img'); em1.className = 'em1'; emoticonsDiv.appendChild(em1);
-        const em2 = document.createElement('img'); em2.className = 'em2'; emoticonsDiv.appendChild(em2);
-        const em3 = document.createElement('img'); em3.className = 'em3'; emoticonsDiv.appendChild(em3);
-        const em4 = document.createElement('img'); em4.className = 'em4'; emoticonsDiv.appendChild(em4);
-        const em5 = document.createElement('img'); em5.className = 'em5'; emoticonsDiv.appendChild(em5);
-        const em6 = document.createElement('img'); em6.className = 'em6'; emoticonsDiv.appendChild(em6);
-        em1.addEventListener("click", this.handleClickEmoticon);
-        em2.addEventListener("click", this.handleClickEmoticon);
-        em3.addEventListener("click", this.handleClickEmoticon);
-        em4.addEventListener("click", this.handleClickEmoticon);
-        em5.addEventListener("click", this.handleClickEmoticon);
-        em6.addEventListener("click", this.handleClickEmoticon);
-        document.getElementById('result').appendChild(emoticonsDiv);
+        let em = [];
+        for (let i = 0; i < 6; i++){
+            em[i] = document.createElement('img');
+            em[i].className = 'emoticons bg' + (i+1).toString();
+            emoticonsDiv.appendChild(em[i]);
+            em[i].addEventListener("click", this.handleClickEmoticon)
+        }
+        document.getElementById('formButtons').appendChild(emoticonsDiv);
         emoticonsDiv.addEventListener("mouseleave", function (event) {
                 emoticonsDiv.remove();
         });
@@ -72,14 +61,14 @@ class Chat extends React.Component {
         document.getElementById('result').appendChild(imageDiv);
     }
     handleSubmit(event) {
-        if (document.getElementById('form-input').innerHTML === '') {
+        if (document.getElementById('contentEditableDiv').innerHTML === '') {
              event.preventDefault();
              return false;
         }
         const message = document.createElement('div');
         message.className = 'cloud';
-        message.innerHTML = document.getElementById('form-input').innerHTML;
-        document.getElementById('form-input').innerHTML = '';
+        message.innerHTML = document.getElementById('contentEditableDiv').innerHTML;
+        document.getElementById('contentEditableDiv').innerHTML = '';
         //SendMessage(message.innerText);
         this.props.AddMessage([this.props.chatId, message.innerText, true]);
         document.getElementById('result').appendChild(message);
@@ -124,14 +113,16 @@ class Chat extends React.Component {
                         }
                     </div>
                 </div>
-                <input id="addFile" className="addFileButton" type="file" onChange={this.handleAddFile}/>
-                <input id="addImage" className="addImageButton" type="file" multiple accept="image/*" onChange={this.handleAddImage}/>
-                <input  id="addEmoticon" className="addEmoticonButton" type="button" onClick={this.handleAddEmoticon} />
-                <form>
-                    <div contentEditable="true" id="form-input" />
-                    <button className="sendButton" onClick={this.handleSubmit}/>
+                <form id='form-input'>
+                    <div id="contentEditableDiv" contentEditable="true" />
+                    <div id="formButtons">
+                        <button className="sendButton" onClick={this.handleSubmit}/>
+                        <input  id="addEmoticon" className="addEmoticonButton" type="button" onClick={this.handleAddEmoticon} />
+                        <input id="addFile" className="addFileButton" type="file" onChange={this.handleAddFile}/>
+                        <input id="addImage" className="addImageButton" type="file" multiple accept="image/*" onChange={this.handleAddImage}/>
+                    </div>
                 </form>
-                <button onClick={this.createInterlocutorMessage}>Create Interlocutor Message</button>
+                <button id="intMessageButton" onClick={this.createInterlocutorMessage}>Create Interlocutor Message</button>
             </div>
         );
     }
