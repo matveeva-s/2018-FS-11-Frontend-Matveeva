@@ -250,21 +250,6 @@
   margin-left: auto;
 }
 
-.preview {
-  width: 200px;
-  height: 200px;
-  border-radius: 15px;
-  border: 5px solid #e4d7e8;
-  background-color: #cbabd6;
-  padding: 5px;
-
-  min-height: 20px;
-  word-wrap: break-word;
-
-  display: -webkit-flex;
-  flex-direction: column;
-  margin-left: auto;
-}
 #enterButton{
   background: url('images/enter1.png') no-repeat;
   position: relative;

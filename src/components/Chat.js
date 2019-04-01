@@ -6,7 +6,6 @@ class Chat extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            file: '',
             name: props.name,
             status: props.status,
             avatar: props.avatar,
@@ -16,65 +15,10 @@ class Chat extends React.Component {
     componentWillMount() {
         this.props.UpdateUnreadMessage(this.props.chatId);
     }
-
     _addHandlers() {
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleAddFile = this.handleAddFile.bind(this);
-        this.handleAddImage = this.handleAddImage.bind(this);
-        this.handleAddEmoticon = this.handleAddEmoticon.bind(this);
         this.createInterlocutorMessage = this.createInterlocutorMessage.bind(this);
-        this.handleClickEmoticon = this.handleClickEmoticon.bind(this);
     }
-    handleAddFile(event) {
-        this.state.file = event.target.files[0];
-        const fileDiv = document.createElement('div');
-        fileDiv.className = 'cloud';
-        fileDiv.innerHTML = `<font color = 'black'>Added file:</font>` + this.state.file.name;
-        document.getElementById('result').appendChild(fileDiv);
-    }
-    handleClickEmoticon(event) {
-        document.querySelector('[contentEditable]').appendChild(event.target.cloneNode(true));
-    }
-    handleAddEmoticon(event) {
-        const emoticonsDiv = document.createElement('div');
-        emoticonsDiv.className = 'emoticonsField';
-        let em = [];
-        for (let i = 0; i < 6; i++){
-            em[i] = document.createElement('img');
-            em[i].className = 'emoticons bg' + (i+1).toString();
-            emoticonsDiv.appendChild(em[i]);
-            em[i].addEventListener("click", this.handleClickEmoticon)
-        }
-        document.getElementById('formButtons').appendChild(emoticonsDiv);
-        emoticonsDiv.addEventListener("mouseleave", function (event) {
-                emoticonsDiv.remove();
-        });
 
-    }
-    handleAddImage(event) {
-        this.state.file = event.target.files[0];
-        const url = URL.createObjectURL(this.state.file);
-        const imageDiv = document.createElement('img');
-        imageDiv.className = 'preview';
-        imageDiv.src = url;
-        SendImage(url, this.state.file.name);
-        document.getElementById('result').appendChild(imageDiv);
-    }
-    handleSubmit(event) {
-        if (document.getElementById('contentEditableDiv').innerHTML === '') {
-             event.preventDefault();
-             return false;
-        }
-        const message = document.createElement('div');
-        message.className = 'cloud';
-        message.innerHTML = document.getElementById('contentEditableDiv').innerHTML;
-        document.getElementById('contentEditableDiv').innerHTML = '';
-        //SendMessage(message.innerText);
-        this.props.AddMessage([this.props.chatId, message.innerText, true]);
-        document.getElementById('result').appendChild(message);
-        event.preventDefault();
-        return false;
-    }
     createInterlocutorMessage(event) {
         const message = document.createElement('div');
         message.className = 'interlocutorCloud';
@@ -88,45 +32,128 @@ class Chat extends React.Component {
         const { state, props } = this;
         const chats = props.indexStore.chats;
         const currChat = chats[props.chatId];
-        //debugger;
         return (
-            <div className="Messenger">
+            <div>
                 <div className="header"/>
                 <Title
                     name={state.name}
                     status={state.status}
                     avatar={state.avatar}
                 />
-                <div className="result-scroll">
-                    <div id="result" className="result">
-                        {
-                            currChat.messages.map(message => {
-                                if (message.own)
-                                    return (
-                                        <div className="cloud"> {message.text} </div>
-                                    );
-                                else
-                                    return (
-                                        <div className="interlocutorCloud"> {message.text} </div>
-                                    );
-                            })
-                        }
-                    </div>
-                </div>
-                <form id='form-input'>
-                    <div id="contentEditableDiv" contentEditable="true" />
-                    <div id="formButtons">
-                        <button className="sendButton" onClick={this.handleSubmit}/>
-                        <input  id="addEmoticon" className="addEmoticonButton" type="button" onClick={this.handleAddEmoticon} />
-                        <input id="addFile" className="addFileButton" type="file" onChange={this.handleAddFile}/>
-                        <input id="addImage" className="addImageButton" type="file" multiple accept="image/*" onChange={this.handleAddImage}/>
-                    </div>
-                </form>
+                <Result
+                    currChat={currChat}
+                    store={this.props}
+                    chatId = {this.props.chatId}
+                />
+                <Input
+                    store={this.props}
+                    chatId={this.props.chatId}
+                />
                 <button id="intMessageButton" onClick={this.createInterlocutorMessage}>Create Interlocutor Message</button>
             </div>
         );
     }
 }
+
+class Input extends React.Component{
+    constructor(props) {
+        super(props);
+        this.state = {
+            message: '',
+            emoticonFieldHidden: true
+        };
+        this._addHandlers();
+    }
+
+    _addHandlers() {
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleAddImage = this.handleAddImage.bind(this);
+        this.handleAddFile = this.handleAddFile.bind(this);
+        this.handleAddEmoticon = this.handleAddEmoticon.bind(this);
+        // this.handleClickEmoticon = this.handleClickEmoticon.bind(this);
+    }
+    handleAddFile(event) {
+        let file = "I added a file: " + event.target.files[0].name;
+        this.props.store.AddMessage([this.props.chatId, file, true]);
+    }
+    handleSubmit(event){
+        let newMessage = document.getElementById('contentEditableDiv').innerText;
+        document.getElementById('contentEditableDiv').innerText = '';
+        if (newMessage === '') {
+            event.preventDefault();
+            return;
+        }
+        //SendMessage(message.innerText);
+        this.props.store.AddMessage([this.props.chatId, newMessage, true]);
+        event.preventDefault();
+    }
+    handleAddEmoticon(event) {
+        console.log("state.emoticonFieldHidden before click ", this.state.emoticonFieldHidden);
+        this.state.emoticonFieldHidden = false;
+        console.log("state.emoticonFieldHidden after click", this.state.emoticonFieldHidden);
+    }
+    render() {
+        return(
+            <form id='form-input'>
+                <div id="contentEditableDiv" contentEditable="true" />
+                <div id="formButtons">
+                    <button className="sendButton" onClick={this.handleSubmit}/>
+                    <EmoticonField hidden = {this.state.emoticonFieldHidden}/>
+                    <input  id="addEmoticon" className="addEmoticonButton" type="button" onClick={(ev) => this.handleAddEmoticon(ev)} />
+                    <input id="addFile" className="addFileButton" type="file" onChange={ev => this.handleAddFile(ev)}/>
+                    <input id="addImage" className="addImageButton" type="file" multiple accept="image/*" onChange={(ev) => this.handleAddImage(ev)}/>
+                </div>
+            </form>
+        );
+    }
+}
+function EmoticonField(props) {
+    {
+        console.log("COME INTO EmotField", props.hidden);
+        if (props.hidden === false)
+            return(
+                <div className='emoticonsField'>
+                    <Emoticon num={1}/>
+                    <Emoticon num={2}/>
+                    <Emoticon num={3}/>
+                    <Emoticon num={4}/>
+                    <Emoticon num={5}/>
+                    <Emoticon num={6}/>
+                </div>);
+        else
+            return false;
+    }
+}
+function Emoticon(props) {
+    let name = 'emoticons bg' + props.num.toString();
+    return (
+        <img className={name}/>
+    )
+}
+function Result(props) {
+    return (
+        <div className="result-scroll">
+            <div id="result" className="result">
+                {
+                    props.store.indexStore.chats[props.chatId].messages.map(message => {
+                        if (message.own) {
+                            return (
+                                <div className="cloud"> {message.text} </div>
+                            );
+                        }
+                        else{
+                            return (
+                                <div className="interlocutorCloud"> {message.text} </div>
+                            );
+
+                        }
+                    })
+                }
+            </div>
+        </div>
+    )
+}
+
 
 function Title(props) {
     return(
